@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bouncing Ball</title>
+</head>
+<body>
+  <canvas id="can" style="border:2px solid black;"></canvas>
+
+<script>
+const can = document.getElementById("can")
+const ctx = can.getContext("2d")
+
+const canWidth = 400
+const canHeight = 400
+can.width = canWidth
+can.height = canHeight
+
+// Ball properties
+let x = canWidth / 2
+let y = 50
+let radius = 20
+
+let velocityY = 0
+let gravity = 0.5
+let bounceFactor = 0.7   // energy loss
+let stopThreshold = 1    // when to stop
+
+function drawBall() {
+  ctx.beginPath()
+  ctx.arc(x, y, radius, 0, Math.PI * 2)
+  ctx.fillStyle = "red"
+  ctx.fill()
+  ctx.closePath()
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canWidth, canHeight)
+
+  // gravity add karo
+  velocityY += gravity
+  y += velocityY
+
+  // ground collision
+  if (y + radius > canHeight) {
+    y = canHeight - radius
+    velocityY = -velocityY * bounceFactor
+
+    // agar bounce bahut chhota ho gaya → stop
+    if (Math.abs(velocityY) < stopThreshold) {
+      velocityY = 0
+    }
+  }
+
+  drawBall()
+
+  // agar ball move ho rahi hai tabhi animate chalao
+  if (velocityY !== 0 || y + radius < canHeight) {
+    requestAnimationFrame(animate)
+  }
+}
+
+animate()
+</script>
+</body>
+</html>
